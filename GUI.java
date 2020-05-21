@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,26 +16,31 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 public class GUI implements ActionListener {
+	
+	//Creation of frames
 	JFrame principal_frame = new JFrame("Chat GUI");
 	JFrame new_account_frame = new JFrame("New account");
 	JFrame connection_frame = new JFrame("Log in");
 	
+	//Creation of panels
 	JPanel accountPanel = new JPanel();
 	JPanel loginPanel = new JPanel();
 	JPanel messagesPanel = new JPanel();
 	JPanel multiPanel = new JPanel();
 	JPanel textPanel = new JPanel();
 
+	//Creation of buttons
 	JButton send = new JButton("SEND");
 	JButton new_conversation = new JButton("+");
 	JButton log_in = new JButton("Log in");
 	JButton new_account = new JButton("Create account");
 	JButton create_account = new JButton("OK");
 	
+	
+	//Creation of text areas
 	JTextArea message_textArea = new JTextArea(6, 105);
 	JTextArea username_textArea = new JTextArea(1, 10);
 	JTextArea password_textArea = new JTextArea(1, 10);
-	
 	JTextArea new_username_textArea = new JTextArea(1, 10);
 	JTextArea new_password_textArea = new JTextArea(1, 10);
 	JTextArea new_firstname_textArea = new JTextArea(1, 10);
@@ -42,13 +48,12 @@ public class GUI implements ActionListener {
 	
 	public GUI(){
 		
-
+	//Connection frame initialization
 	connection_frame.setMinimumSize(new Dimension(500, 100));
 	connection_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	loginPanel.setPreferredSize(new Dimension(490, 90));
 	loginPanel.setBorder(BorderFactory.createTitledBorder("Welcome to our chat! :)"));
-	//loginPanel.setLayout(new GridLayout(3,2, 1, 1));
 	
 	JLabel enter_username1 = new JLabel("Username:");
 	JLabel enter_password1 = new JLabel("Password:");
@@ -68,7 +73,7 @@ public class GUI implements ActionListener {
 	new_account.setActionCommand("new_account");
 	new_account.addActionListener(this);
 
-	
+	//New account frame initialization	
 	new_account_frame.setMinimumSize(new Dimension(200, 150));
 	new_account_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	accountPanel.setPreferredSize(new Dimension(190, 140));
@@ -84,6 +89,9 @@ public class GUI implements ActionListener {
 	JLabel enter_firstname = new JLabel("Firstname:");
 	JLabel enter_lastname = new JLabel("Lastname:");
 	
+	create_account.setActionCommand("create");
+	create_account.addActionListener(this);
+	
 
 	new_account_frame.add(accountPanel);
 	accountPanel.add(enter_username2, BorderLayout.NORTH);
@@ -96,6 +104,8 @@ public class GUI implements ActionListener {
 	accountPanel.add(new_password_textArea, BorderLayout.NORTH);
 	accountPanel.add(create_account, BorderLayout.SOUTH);
 	
+	
+	//Principal frame initialization
 	principal_frame.setMinimumSize(new Dimension(1280, 800));
 	principal_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
@@ -106,8 +116,7 @@ public class GUI implements ActionListener {
 	new_conversation.addActionListener(this);
 	
 
-	
-	messagesPanel.setPreferredSize(new Dimension(1000, 600));
+
 	multiPanel.setPreferredSize(new Dimension(270, 600));
 	textPanel.setPreferredSize(new Dimension(1270, 180));
 	
@@ -115,12 +124,14 @@ public class GUI implements ActionListener {
 	multiPanel.setBorder(BorderFactory.createTitledBorder("Chats"));
 	textPanel.setBorder(BorderFactory.createTitledBorder("Write here"));
 	
-	messagesPanel.setLayout(new GridLayout(35,1, 1, 1));
+	messagesPanel.setLayout(new BoxLayout(messagesPanel,BoxLayout.Y_AXIS));
 	
 	JScrollPane scrollPane = new JScrollPane(message_textArea);
 	JScrollPane chat_scrollPane = new JScrollPane(messagesPanel);
+	chat_scrollPane.setPreferredSize(new Dimension(1000, 600));
 	scrollPane.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 	chat_scrollPane.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+	chat_scrollPane.setHorizontalScrollBarPolicy ( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
 	textPanel.add(scrollPane);
 	message_textArea.setEditable(true);
 	
@@ -128,12 +139,8 @@ public class GUI implements ActionListener {
 	textPanel.add(send, BorderLayout.EAST);
 	textPanel.add(new_conversation, BorderLayout.EAST);
 	principal_frame.add(chat_scrollPane, BorderLayout.WEST);
-	//frame.add(messagesPanel, BorderLayout.WEST);
 	principal_frame.add(multiPanel, BorderLayout.EAST);
 	principal_frame.add(textPanel, BorderLayout.SOUTH);
-	//principal_frame.setLocationRelativeTo(null);
-	//principal_frame.pack();
-	//principal_frame.setVisible(true);
 	connection_frame.setLocationRelativeTo(null);
 	connection_frame.pack();
 	connection_frame.setVisible(true);
@@ -150,9 +157,9 @@ public class GUI implements ActionListener {
 			messagesPanel.add(new_message);
 			messagesPanel.updateUI();
 			message_textArea.setText(null);
+			//TODO Add the message to the database
 			break;
 		case "login":
-			//connection_frame.dispatchEvent(new WindowEvent(connection_frame, WindowEvent.WINDOW_CLOSING));
 			connection_frame.setVisible(false);
 			//TODO Verify the data to log in
 			principal_frame.setLocationRelativeTo(null);
@@ -161,10 +168,16 @@ public class GUI implements ActionListener {
 			break;
 			
 		case "new_account":
-			//TODO Add account to database
 			new_account_frame.setLocationRelativeTo(null);
 			new_account_frame.pack();
 			new_account_frame.setVisible(true);
+			break;
+			
+		case "create":
+			//TODO Add account to database
+			//pour récupérer le contenu d'une textarea faites juste textArea.getText()
+			new_account_frame.setVisible(false);
+			connection_frame.setVisible(true);
 			break;
 		}
 	}
